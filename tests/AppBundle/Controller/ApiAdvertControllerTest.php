@@ -94,4 +94,58 @@ class ApiAdvertControllerTest extends WebTestCase
                 'application/json'
             ));
     }
+
+    public function testUpdate()
+    {
+        $client = static::createClient();
+        $crawler = $client->request(
+            'PUT',
+            '/api/adverts/1',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                      "author": "Benjamin"
+                      }'
+        );
+        echo $client->getResponse()->getContent();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('Benjamin',$responseData['author']);
+    }
+    public function testPatch()
+    {
+        $client = static::createClient();
+        $crawler = $client->request(
+            'Patch',
+            '/api/adverts/1',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                      "author": "Alexendre"
+                      }'
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('Alexendre',$responseData['author']);
+    }
+    public function testDelete()
+    {
+        $client = static::createClient();
+
+        $client->request('DELETE', '/api/adverts/1');
+
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+    }
 }

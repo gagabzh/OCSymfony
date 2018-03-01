@@ -44,7 +44,57 @@ class ApiAdvertController extends Controller
 
             return $response;
         }
+        elseif ($request->isMethod('PUT') || $request->isMethod('PATCH')  ) {
+            $em = $this->getDoctrine()->getManager();
+            $new = $em->getRepository('OCPlatformBundle:Advert')->find($request->get('id'));
+            if (null === $new) {
+                $data = $this->get('jms_serializer')->serialize("error id : " . $request->get('id') . " not found", 'json');
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;
+            }
+            $form = $this->get('form.factory')->create(AdvertTypeApi::class, $new);
+            $form->submit($request->request->all(),false);
+            if ($form->isValid()) {
+                // l'entité vient de la base, donc le merge n'est pas nécessaire.
+                // il est utilisé juste par soucis de clarté
+                $em->merge($new);
+                $em->flush();
+                $data = $this->get('jms_serializer')->serialize($new, 'json');
 
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+
+                return $response;
+            } else {
+                $data = $this->get('jms_serializer')->serialize($form->getErrors(), 'json');
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(500);
+                return $response;
+            }
+        }
+        elseif ($request->isMethod('DELETE'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $new = $em->getRepository('OCPlatformBundle:Advert')->find($request->get('id'));
+            if (null === $new) {
+                $data = $this->get('jms_serializer')->serialize("error id : ".$request->get('id')." not found", 'json');
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;
+            }
+            $em->remove($new);
+            $em->flush();
+            $data = $this->get('jms_serializer')->serialize("artifact id : ".$request->get('id')." removed", 'json');
+            $response = new Response($data);
+            $response->setStatusCode(Response::HTTP_NO_CONTENT);
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
         else{
             $data = $this->get('jms_serializer')->serialize("error", 'json');
             $response = new Response($data);
