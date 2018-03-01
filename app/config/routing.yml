@@ -2,6 +2,9 @@ oc_platform:
     resource: "@OCPlatformBundle/Resources/config/routing.yml"
     prefix:   /platform
 
+oc_core:
+    resource: "@OCCoreBundle/Resources/config/routing.yml"
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
