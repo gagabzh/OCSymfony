@@ -107,8 +107,6 @@ class AdvertController extends Controller
      */
     public function addAction(Request $request)
     {
-
-
         // On crée un objet Advert
         $advert = new Advert();
         $form = $this->get('form.factory')->create(AdvertType::class, $advert);

@@ -48,17 +48,46 @@ class ApiAdvertControllerTest extends WebTestCase
                 'Content-Type',
                 'application/json'
             ));
-        echo $client->getResponse()->getContent();
+
         $responseData = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(5,count($responseData));;
+        $this->assertEquals(5,count($responseData));
     }
 
     public function testPostList()
     {
         $client = static::createClient();
 
-        $crawler = $client->request('POST', '/api/adverts');
+        $crawler = $client->request('DELETE', '/api/adverts');
         $this->assertEquals(405, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
+    }
+    public function testPost()
+    {
+        $client = static::createClient();
+        $crawler = $client->request(
+            'POST',
+            '/api/adverts',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{
+                      "title": "Testing : Recherche développeur Symfony.",
+                      "author": "Alexendre",
+                      "email": "bgarnier@aneo.fr",
+                      "content": "Nous recherchons un développeur Symfony débutant sur Lyon. Blabla...",
+                      "published": true
+                      }'
+        );
+        // Stop here and mark this test as incomplete.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+        echo $client->getResponse()->getContent();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertTrue(
             $client->getResponse()->headers->contains(
                 'Content-Type',

@@ -9,7 +9,11 @@
 namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Entity\Image;
 
+use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\Form\AdvertTypeApi;
+use OC\PlatformBundle\Form\ImageType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +44,7 @@ class ApiAdvertController extends Controller
 
             return $response;
         }
+
         else{
             $data = $this->get('jms_serializer')->serialize("error", 'json');
             $response = new Response($data);
@@ -87,6 +92,33 @@ class ApiAdvertController extends Controller
 
             return $response;
         }
+        elseif ($request->isMethod('POST'))
+        {
+            $advert = new Advert();
+            $form = $this->get('form.factory')->create(AdvertTypeApi::class, $advert);
+            $form->submit($request->request->all());
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                // l'entité vient de la base, donc le merge n'est pas nécessaire.
+                // il est utilisé juste par soucis de clarté
+                $em->merge($advert);
+                $em->flush();
+                $data = $this->get('jms_serializer')->serialize($advert, 'json');
+
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+
+                return $response;
+            } else {
+                $data = $this->get('jms_serializer')->serialize($form->getErrors(), 'json');
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(500);
+                return $response;
+            }
+
+        }
+
         else{
             $data = $this->get('jms_serializer')->serialize("error", 'json');
             $response = new Response($data);
