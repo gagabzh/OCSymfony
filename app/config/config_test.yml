@@ -17,10 +17,6 @@ swiftmailer:
 
 doctrine:
     dbal:
-        driver: pdo_mysql
-        host: '%database_host%'
-        port: '%database_port%'
+        driver: pdo_sqlite
         dbname: '%database_name%_test'
-        user: '%database_user%'
-        password: '%database_password%'
-        charset: UTF8
+        path:  "%kernel.root_dir%/../var/cache/test/data.sqlite"
