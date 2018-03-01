@@ -84,3 +84,15 @@ fos_user:
     from_email:
             address: "%mailer_user%"
             sender_name: "%mailer_user%"
+
+# FOS Rest bundle
+#app/config/config.yml
+
+fos_rest:
+    body_converter:
+        enabled: true
+    view:
+        formats: { json: true, xml: false, rss: false }
+    serializer:
+        serialize_null: true
+

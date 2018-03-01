@@ -14,7 +14,14 @@ class AdvertControllerTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
+    public function testPlateformIndex()
+    {
+        $client = static::createClient();
 
+        $crawler = $client->request('GET', '/platform');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
     # utilisateur non identifié
     public function testIndexUnknown()
     {

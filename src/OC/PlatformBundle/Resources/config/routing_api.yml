@@ -1,0 +1,8 @@
+oc_api_view:
+    path:      /adverts/{id}
+    defaults: { _controller: OCPlatformBundle:ApiAdvert:apiShow}
+    requirements:
+        id: \d+
+oc_api_home:
+    path:      /
+    defaults: { _controller: OCPlatformBundle:ApiAdvert:apiHome}
