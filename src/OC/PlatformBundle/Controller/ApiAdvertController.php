@@ -67,5 +67,32 @@ class ApiAdvertController extends Controller
             return $response;
         }
     }
+    public function apiListAction(Request $request)
+    {
+        if ($request->isMethod('GET'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $new = $em->getRepository('OCPlatformBundle:Advert')->findAll();
+            if (null === $new) {
+                $data = $this->get('jms_serializer')->serialize("error id : ".$request->get('id')." not found", 'json');
+                $response = new Response($data);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;
+            }
+            $data = $this->get('jms_serializer')->serialize($new, 'json');
 
+            $response = new Response($data);
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
+        else{
+            $data = $this->get('jms_serializer')->serialize("error", 'json');
+            $response = new Response($data);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED);
+            return $response;
+        }
+    }
 }

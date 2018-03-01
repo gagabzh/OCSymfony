@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApiAdvertControllerTest extends WebTestCase
 {
-    public function testHome()
+    public function testErrorShow()
     {
         $client = static::createClient();
 
@@ -26,9 +26,43 @@ class ApiAdvertControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/api/adverts/1');
+        $client->request('GET', '/api/adverts/1');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('Alexendre',$responseData['author']);
+    }
+    public function testList()
+    {
+        $client = static::createClient();
 
+        $crawler = $client->request('GET', '/api/adverts');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
+        echo $client->getResponse()->getContent();
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(5,count($responseData));;
+    }
+
+    public function testPostList()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('POST', '/api/adverts');
+        $this->assertEquals(405, $client->getResponse()->getStatusCode());
+        $this->assertTrue(
+            $client->getResponse()->headers->contains(
+                'Content-Type',
+                'application/json'
+            ));
     }
 }

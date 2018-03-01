@@ -6,3 +6,6 @@ oc_api_view:
 oc_api_home:
     path:      /
     defaults: { _controller: OCPlatformBundle:ApiAdvert:apiHome}
+oc_api_list:
+    path:      /adverts
+    defaults: { _controller: OCPlatformBundle:ApiAdvert:apiList}
