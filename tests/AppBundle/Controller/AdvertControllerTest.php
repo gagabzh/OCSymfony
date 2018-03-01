@@ -16,7 +16,7 @@ class AdvertControllerTest extends WebTestCase
     }
 
     # utilisateur non identifié
-    public function testIndexUnknow()
+    public function testIndexUnknown()
     {
         $client = static::createClient();
 
