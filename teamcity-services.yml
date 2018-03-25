@@ -1,0 +1,8 @@
+mysql:
+  image: mysql:5.7
+  environment:
+    - MYSQL_ROOT_PASSWORD=D4t4b4s3!
+  ports:
+    - "8183:3306"
+  volumes:
+    - ~/db:/var/lib/mysql
