@@ -1,7 +1,10 @@
 language: php
 php:
   - '7.1'
-
+services:
+   - docker
+before_install:
+   - docker compose teamcity-services.yml up
 script:
    - composer install
    - php bin/console doctrine:database:create --env=test
